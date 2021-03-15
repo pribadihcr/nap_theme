@@ -1,0 +1,51 @@
+{% import 'macros/form.html' as form %}
+
+{% set username_error = true if error_summary %}
+{% set password_error = true if error_summary %}
+{% if error_summary %}
+<div class="govuk-form-group govuk-form-group--error">
+{% else %}
+<div class="govuk-form-group">
+{% endif %}
+  <form action="{{ action }}" method="post">
+    <div class="govuk-form-group govuk-!-margin-top-6"></div>
+      <fieldset class="govuk-fieldset govuk-!-padding-bottom-3" role="group" aria-describedby="login-hint">
+        {% if error_summary%}
+          <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">
+              There is a problem
+            </h2>
+            <div class="govuk-error-summary__body">
+              <ul class="govuk-list govuk-error-summary__list">
+                {% for error_message in error_summary%}
+                <li>
+                  <a href="#field-login">{{error_message | replace("Login failed. Bad username or password.","Enter a correct username and password")}}</a>
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        {% endif %}
+        <div class="govuk-form-group">
+          <h1 class="govuk-label-wrapper">
+            <label class="govuk-label govuk-label--l" for="login">
+              {{_("Username")}}
+            </label>
+          </h1>
+          <input class="govuk-input {% if username_error %}govuk-input--error{% endif %}" id="field-login" name="login" type="text" aria-describedby="username-hint" autofocus>
+        </div>
+        <div class="govuk-form-group">
+          <h1 class="govuk-label-wrapper">
+            <label class="govuk-label govuk-label--l" for="password">
+              {{_("Password")}}
+            </label>
+          </h1>
+          <input class="govuk-input {% if password_error %}govuk-input--error {% endif %}" id="field-password" name="password" type="password" aria-describedby="password-hint">
+        </div>        
+      </fieldset>
+      {% block login_button %}
+        <button class="govuk-button" data-module="govuk-button" type="submit">{{ _('Sign in') }}</button>
+      {% endblock %}
+  </div>
+  </form>
+

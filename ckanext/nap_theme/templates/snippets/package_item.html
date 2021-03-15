@@ -1,0 +1,98 @@
+{#
+Displays a single of dataset.
+
+package        - A package to display.
+item_class     - The class name to use on the list item.
+hide_resources - If true hides the resources (default: false).
+banner         - If true displays a popular banner (default: false).
+truncate       - The length to trucate the description to (default: 180)
+truncate_title - The length to truncate the title to (default: 80).
+
+Example:
+
+  {% snippet 'snippets/package_item.html', package=c.datasets[0] %}
+
+#}
+{% set truncate = truncate or 180 %}
+{% set truncate_title = truncate_title or 80 %}
+{% set title = package.title or package.name %}
+{% set notes = h.markdown_extract(package.notes, extract_length=truncate) %}
+
+{% block package_item %}
+<div class="govuk-grid-row">
+    {% block content %}
+      <div class="govuk-grid-column-full">
+        {% block heading %}
+        <h3 class="govuk-heading-m govuk-!-margin-bottom-2">
+            {% block heading_private %}
+            {% endblock %}
+            {% block heading_title %}
+		          {{ 
+                h.link_to(h.truncate(title, truncate_title), 
+                h.url_for('%s.read' % package.type, id=package.name), 
+                class='govuk-link govuk-link--no-visited-state') 
+              }}
+            {% endblock %}
+            {% block heading_meta %}
+            {% endblock %}
+          </h3>
+        {% endblock %}
+
+        {% block additional_details %}
+        {% if(package.data_available == "no") %}
+            <p class="govuk-body govuk-!-margin-bottom-1"> 
+              <span class="govuk-!-font-weight-bold">
+                {{_("Availability:")}}
+              </span>
+                {{ _("Not released") }}
+            </p>
+          {% endif %}
+          <p class="govuk-body govuk-!-margin-bottom-1"> 
+            <span class="govuk-!-font-weight-bold">
+              {{_("Location:")}}
+            </span>
+            {{ package.location }}
+          </p>
+          {% set time_period = h.nap_theme_get_time_period(package) %}
+          {% if time_period != "" %}
+            <p class="govuk-body govuk-!-margin-bottom-1"> 
+              <span class="govuk-!-font-weight-bold">
+                {{_("Time period:")}}
+              </span>
+              {{time_period}}
+            </p>
+          {% endif %}
+          {% if package.regularly_updated == "yes"%}
+            <p class="govuk-body govuk-!-margin-bottom-1"> 
+              <span class="govuk-!-font-weight-bold">
+                {{_("Update frequency:")}}
+              </span>
+              {{ h.nap_theme_get_update_frequency_name(package.update_frequency) }}
+            </p>
+          {% endif %}
+          <p class="govuk-body govuk-!-margin-bottom-1"> 
+            <span class="govuk-!-font-weight-bold">
+              {{_("Organisation")}} 
+            </span>
+            {{ package.organization.title }}
+          </p>
+          <p class="govuk-body govuk-!-margin-bottom-1"> 
+            {% set licence_type = h.nap_theme_get_licence_type(package.license_id)%}
+            {% if licence_type != "" %}
+              <span class="govuk-tag nap-tag">{{licence_type}}</span>
+            {% endif %}
+            {% for topic in package.topics %}
+            <span class="govuk-tag nap-tag">
+              {{ topic }}
+            </span>
+            {% endfor %}            
+            <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-16" style="float:right;" href="{{h.url_for('%s.read' % package.type, id=package.name)}}">View dataset</a>
+          </p>
+        {% endblock %}
+
+        {% block notes %}
+        {% endblock %}
+      </div>
+    {% endblock %}
+ </div>
+{% endblock %}

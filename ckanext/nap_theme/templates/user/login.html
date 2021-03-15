@@ -1,0 +1,27 @@
+{% ckan_extends %}
+
+{% block breadcrumb_content %}
+  <li class="govuk-breadcrumbs__list-item">{{ h.nav_link(_('Sign in'), named_route='user.login') }}</li>
+{% endblock %}
+{% set error_summary = h.flash.pop_messages() | list%}
+
+{% block title %}Sign in - {{ super() }}{% endblock %}
+{% block main_section_content %}
+  <section class="module">
+    <div class="module-content">
+      <span class="govuk-caption-l" style="color: #1d70b8; font-weight: 700;">{{_("Sign in to create a metadata entry")}}</span>
+      <h1 class="govuk-heading-xl govuk-!-margin-bottom-6">
+      {% block page_heading %}
+      {{_('Sign in')}}
+      {% endblock %}
+      </h1>
+      <span class="govuk-caption-l">
+        {{_('Enter the sign in details provided to you.')}}
+      </span>
+
+      {% block form %}
+        {% snippet "user/snippets/login_form.html", action=g.login_handler, error_summary=error_summary %}
+      {% endblock %}
+    </div>
+  </section>
+{% endblock %}
