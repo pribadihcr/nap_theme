@@ -485,8 +485,8 @@ class NapThemePlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
     # IConfigurer
     def update_config(self, config_):
         toolkit.add_template_directory(config_, 'templates')
-        toolkit.add_public_directory(config_, 'fanstatic')
-        toolkit.add_resource('fanstatic', 'nap_theme')
+        toolkit.add_public_directory(config_, 'assets')
+        toolkit.add_resource('assets', 'nap_theme')
 
     # ITemplateHelpers 
     def get_helpers(self):
